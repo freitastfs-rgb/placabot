@@ -1,0 +1,10 @@
+services:
+  - type: worker
+    name: placamonitor-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    disk:
+      name: dados
+      mountPath: /data
+      sizeGB: 1
