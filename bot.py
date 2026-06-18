@@ -217,7 +217,14 @@ async def handle_placa(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ── INICIAR ──
 def main():
+    import asyncio
     from telegram.ext import CommandHandler
+
+    try:
+        asyncio.get_event_loop()
+    except RuntimeError:
+        asyncio.set_event_loop(asyncio.new_event_loop())
+
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(MessageHandler(filters.PHOTO | filters.TEXT, handle_message))
     app.add_handler(CommandHandler("lista", handle_lista))
