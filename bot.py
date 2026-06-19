@@ -4,11 +4,12 @@ import re
 import base64
 import httpx
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
-# ── CONFIGURAÇÕES (via variáveis de ambiente — configurar no Render) ──
+TZ_BRASIL = timezone(timedelta(hours=-3))
+
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 ANTHROPIC_KEY  = os.environ.get("ANTHROPIC_KEY")
 DB_FILE        = "/data/placas.json" if os.path.exists("/data") else "placas.json"
@@ -114,7 +115,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = update.message
     user = msg.from_user.first_name or "Alguém"
     chat_id = msg.chat_id
-    agora = datetime.now().strftime("%d/%m/%Y %H:%M")
+    agora = datetime.now(TZ_BRASIL).strftime("%d/%m/%Y %H:%M")
 
     if msg.text and not msg.photo:
         placa_raw, local = extrair_placa_do_texto(msg.text)
